@@ -15,7 +15,8 @@ class Solution:
         
         for i in range(len(weights)):
 
-            h = np.dot(h, weights[i]) + biases[i]
+            # h = np.dot(h, weights[i]) + biases[i]
+            h = h @ weights[i] + biases[i]
 
             if i < len(weights) - 1:
                 h = np.maximum(0, h)

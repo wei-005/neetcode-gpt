@@ -21,7 +21,8 @@ class Solution(nn.Module):
         # Return a B, 1 tensor and round to 4 decimal places
         # pass
         emb = self.embedding(x)  # (B, T, embed_dim)
-        pooled = emb.mean(dim=1)  # (B, embed_dim)
+        # pooled = emb.mean(dim=1)  # (B, embed_dim)
+        pooled = torch.mean(emb, dim=1)
 
         output = self.linear(pooled)
 

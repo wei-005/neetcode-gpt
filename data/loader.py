@@ -18,16 +18,22 @@ class Solution:
         # pass
         torch.manual_seed(0)
 
-        X = torch.empty(batch_size, context_length, dtype=torch.long)
-        Y = torch.empty(batch_size, context_length, dtype=torch.long)
+        # X = torch.empty(batch_size, context_length, dtype=torch.long)
+        # Y = torch.empty(batch_size, context_length, dtype=torch.long)
 
-        for i in range(batch_size):
+        # for i in range(batch_size):
 
-            pos = torch.randint(0, len(data) - context_length, ()).item()
+        #     pos = torch.randint(0, len(data) - context_length, ()).item()
 
-            X[i] = data[pos:pos + context_length]
+        #     X[i] = data[pos:pos + context_length]
 
-            Y[i] = data[pos + 1:pos + context_length + 1]
+        #     Y[i] = data[pos + 1:pos + context_length + 1]
 
-        return X, Y
+        # return X, Y
+
+        torch.manual_seed(0)
+        ix = torch.randint(len(data) - context_length, (batch_size,))
+        x = torch.stack([data[i:i + context_length] for i in ix])
+        y = torch.stack([data[i + 1:i + 1 + context_length] for i in ix])
+        return x, y
 

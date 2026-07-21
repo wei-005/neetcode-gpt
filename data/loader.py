@@ -25,9 +25,9 @@ class Solution:
 
             pos = torch.randint(0, len(data) - context_length, ()).item()
 
-            X[i] = torch.tensor(data[pos:pos + context_length])
+            X[i] = data[pos:pos + context_length]
 
-            Y[i] = torch.tensor(data[pos + 1:pos + context_length + 1])
+            Y[i] = data[pos + 1:pos + context_length + 1]
 
         return X, Y
 

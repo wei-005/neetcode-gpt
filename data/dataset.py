@@ -11,7 +11,7 @@ class Solution:
         # pass
         data = raw_dataset.split()
 
-        ix = torch.randint(len(data) - context_length, (batch_size,))
+        ix = torch.randint(len(data) - context_length, (batch_size,)).tolist()
 
         x = [data[i:i + context_length] for i in ix]
         y = [data[i+1:i + context_length + 1] for i in ix]

@@ -13,10 +13,13 @@ class GPT(nn.Module):
         # pass
         self.token_embedding = nn.Embedding(vocab_size, model_dim)
         self.position_embedding = nn.Embedding(context_length, model_dim)
-        self.block = self.TransformerBlock(model_dim, num_heads)
-        self.layer_norm = nn.LayerNorm(model_dim)
-        self.output = nn.Linear(model_dim, vocab_size, bias=True)
-        self.num_blocks = num_blocks
+        # self.block = self.TransformerBlock(model_dim, num_heads)
+        self.transformer_blocks = nn.Sequential()
+        for i in range(num_blocks):
+            self.transformer_blocks.append(self.TransformerBlock(model_dim, num_heads))
+        self.final_norm = nn.LayerNorm(model_dim)
+        self.vocab_projection = nn.Linear(model_dim, vocab_size, bias=True)
+        # self.num_blocks = num_blocks
 
     def forward(self, context: TensorType[int]) -> TensorType[float]:
         torch.manual_seed(0)
@@ -32,22 +35,17 @@ class GPT(nn.Module):
         positions = torch.arange(T, device=context.device)
         pos_emb = self.position_embedding(positions)
 
-        x = token_emb + pos_emb
+        embedded = token_emb + pos_emb
 
-        # self.num_blocks = num_blocks
-        # self.num_heads = num_heads
+        # for _ in range(self.num_blocks):
+        #     x = self.block(x)
 
-        for _ in range(self.num_blocks):
-            x = self.block(x)
+        # x = self.layer_norm(x)
 
-        x = self.layer_norm(x)
-
-        output = self.output(x)
+        output = self.final_norm(self.transformer_blocks(embedded))
+        logits = self.vocab_projection(output)
         
-        return torch.round(output, decimals=4)
-
-
-        
+        return torch.round(logits, decimals=4)
 
     # Do NOT modify the code below this line
     class TransformerBlock(nn.Module):

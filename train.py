@@ -21,13 +21,14 @@ class Solution:
             x = torch.stack([data[i:i + context_length] for i in ix])
             y = torch.stack([data[i + 1:i + 1 + context_length] for i in ix])
 
+            optimizer.zero_grad()
+            
             logits = model(x)
             logits_flat = logits.reshape(-1, logits.shape[-1])
             targets_flat = y.reshape(-1)
 
             loss = F.cross_entropy(logits_flat, targets_flat)
 
-            optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
